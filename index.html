@@ -1,0 +1,56 @@
+<!--
+ * @Description:  动态参数
+ * @Autor: sy
+ * @Date: 2021-07-01 09:38:48
+ * @LastEditors: sy
+ * @LastEditTime: 2021-07-01 14:21:01
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      {{counter}}
+      <hr />
+      <input :[type]="password" ref='valueInput' />
+      <button @click="()=>{$data.counter++}">密码类型</button>
+      <button @click="counter=0">文本类型</button>
+      <button @click="submit()">获取value</button>
+    </div>
+  </body>
+  <script src="https://unpkg.com/vue@next"></script>
+  <script>
+    const Counter = {
+      data() {
+        return {
+          password: "md",
+          counter: 0,
+          img: "https://picsum.photos/200/300",
+        };
+      },
+      computed: {
+        type() {
+          if (this.counter != 0) {
+            this.password = "password";
+            return "type";
+          } else {
+            this.password = "";
+            return "value";
+          }
+        },
+      },
+      methods:{
+          submit(){
+            console.log(this.$refs.valueInput.value)
+          }
+      }
+    };
+
+    Vue.createApp(Counter).mount("#app");
+  </script>
+</html>

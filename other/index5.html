@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div class="round">
+      <div class="line"></div>
+    </div>
+    <style>
+      .round {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: lightblue;
+        position: relative;
+      }
+      
+      @keyframes rotateLine {
+        from {
+          transform: translateX(-50%) rotate(0deg);
+        }
+
+        to {
+          transform: translateX(-50%) rotate(360deg);
+        }
+      }
+
+      .line {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform-origin: top;
+        animation: rotateLine 4s linear infinite;
+
+        height: 40px;
+        border-width: 2px;
+        border-style: solid;
+        border-image-source: linear-gradient(
+          165.81deg,
+          rgba(224, 106, 202, 1) 0%,
+          rgba(93, 245, 236, 1) 119.06%
+        );
+        border-image-slice: 1;
+        border-image-outset: 0.5px;
+        box-shadow: 0px 0px 6px rgba(255, 255, 255, 0.75);
+      }
+    </style>
+  </body>
+</html>

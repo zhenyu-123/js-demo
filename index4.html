@@ -1,0 +1,40 @@
+<!--
+ * @Description: 
+ * @Autor: sy
+ * @Date: 2021-07-06 17:59:04
+ * @LastEditors: sy
+ * @LastEditTime: 2021-07-06 18:22:53
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul>
+      <li>213</li>
+      <li>213</li>
+      <li>213</li>
+      <li class="md">dede</li>
+      <li>sad</li>
+    </ul>
+    <button onclick="yc()">移除</button>
+  </body>
+  <script>
+    let tr = document.createElement("li");
+    let ul = document.querySelector("ul");
+    let md = document.querySelector(".md");
+    tr.style.lineHeight = "100px";
+    tr.setAttribute("class", "xin");
+    ul.insertBefore(tr, md);
+
+    function yc() {
+      let xin = document.querySelector(".xin");
+      console.log(xin);
+      ul.removeChild(xin);
+    }
+  </script>
+</html>

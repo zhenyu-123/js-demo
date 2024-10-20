@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>选择</title>
+  </head>
+  <body>
+    <script>
+        // https://www.cnblogs.com/zhouliang/p/6679836.html
+      let example = [8, 94, 15, 88, 55, 76, 21, 39];
+      function selectSort(arr) {
+        let len = arr.length;
+        let minIndex, temp;
+        console.time("选择排序耗时");
+        for (let i = 0; i < len - 1; i++) {
+          minIndex = i;
+          for (let j = i + 1; j < len; j++) {
+            if (arr[j] < arr[minIndex]) {
+              minIndex = j;
+            }
+          }
+          temp = arr[i];
+          arr[i] = arr[minIndex];
+          arr[minIndex] = temp;
+        }
+        console.timeEnd("选择排序耗时");
+        return arr;
+      }
+        console.log(selectSort(example));
+    </script>
+  </body>
+</html>
+<script>
+    let a=1,b=2,temp;
+    temp=a;
+    a=b;
+    b=temp;
+    console.log(a,b)
+
+</script>

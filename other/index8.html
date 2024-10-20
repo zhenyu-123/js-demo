@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--360浏览器优先以webkit内核解析-->
+  <title>后台管理系统</title>
+  <link rel="shortcut icon" href="favicon.ico">
+  <link href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}" rel="stylesheet" />
+  <link href="../static/css/font-awesome.min.css" th:href="@{/css/font-awesome.min.css}" rel="stylesheet" />
+  <!-- <link href="../static/css/style.min.css" th:href="@{/css/style.min.css}" rel="stylesheet" /> -->
+  <!-- 新增 -->
+  <link rel="stylesheet" href="./css/index.css" />
+</head>
+
+<body>
+  <div class="board-page" id="app">
+    <div class="board-top">
+      <div class="board-item bg1">
+        <div class="board-title">当前在线人数</div>
+        <div class="board-center">
+          <div class="board-icon">
+            <img src="./images/bg1.png" alt="" />
+          </div>
+          <div class="board-num">{{baseData.loginTodayUser}}</div>
+        </div>
+        <div class="board-bot">
+          <div class="board-bot-item">
+            <span>周同比</span>
+            <div>12%</div>
+          </div>
+          <div class="board-bot-item">
+            <span>日环比</span>
+            <div>23%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="board-item bg2">
+        <div class="board-title">注册总用户</div>
+        <div class="board-center">
+          <div class="board-icon">
+            <img src="./images/bg2.png" alt="" />
+          </div>
+          <div class="board-num">{{baseData.registereTodayUser}}</div>
+        </div>
+        <div class="board-bot">
+          <div class="board-bot-item">
+            <span>周同比</span>
+            <div>12%</div>
+          </div>
+          <div class="board-bot-item">
+            <span>日环比</span>
+            <div>23%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="board-item bg3">
+        <div class="board-title">今日登录人数</div>
+        <div class="board-center">
+          <div class="board-icon">
+            <img src="./images/bg3.png" alt="" />
+          </div>
+          <div class="board-num">{{baseData.loginTodayUser}}</div>
+        </div>
+        <div class="board-bot">
+          <div class="board-bot-item">
+            <span>周同比</span>
+            <div>12%</div>
+          </div>
+          <div class="board-bot-item">
+            <span>日环比</span>
+            <div>23%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="board-item bg4">
+        <div class="board-title">今日注册人数</div>
+        <div class="board-center">
+          <div class="board-icon">
+            <img src="./images/bg4.png" alt="" />
+          </div>
+          <div class="board-num">{{baseData.registereTodayUser}}</div>
+        </div>
+        <div class="board-bot">
+          <div class="board-bot-item">
+            <span>周同比</span>
+            <div>12%</div>
+          </div>
+          <div class="board-bot-item">
+            <span>日环比</span>
+            <div>23%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- center -->
+    <div class="board-center">
+      <div class="board-center-left">
+        <div class="pay-box">
+          <div class="title">支付订单</div>
+          <div class="pay-tab">
+            <div :class="['pay-tab-item',curOrderTime==1?'pay-tab-active':'']" @click="switchOrder(1)">本周</div>
+            <div :class="['pay-tab-item',curOrderTime==2?'pay-tab-active':'']" @click="switchOrder(2)">本月</div>
+            <div :class="['pay-tab-item',curOrderTime==3?'pay-tab-active':'']" @click="switchOrder(3)">本年</div>
+          </div>
+        </div>
+        <div class="order-bar" id="order-bar"></div>
+      </div>
+      <div class="board-center-right">
+        <div class="seek-tops">
+          <span class="seek-title">待审核寻人帖</span>
+          <span class="seek-nums">356,0</span>
+        </div>
+        <div class="seek-box">
+          <div class="seek-item" v-for="(item,index) in seekList" :key="index">
+            <div class="seek-item-left">
+              <div class="seek-top">
+                <div class="seek-name">{{item.title}}</div>
+                <div class="seek-tag">待审核</div>
+              </div>
+              <div class="seek-bot">{{item.createTime}}</div>
+            </div>
+            <div class="seek-item-right" @click="seekDetail(item.id)">去审核</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- bot -->
+    <div class="board-bottom">
+      <div class="board-bottom-left">
+        <div class="pay-box">
+          <div class="title">用户在线时长</div>
+          <div class="pay-tab">
+            <div :class="['pay-tab-item',curOnline==1?'pay-tab-active':'']" @click="switchOnline(1)">今日</div>
+            <div :class="['pay-tab-item',curOnline==2?'pay-tab-active':'']" @click="switchOnline(2)">本周</div>
+            <div :class="['pay-tab-item',curOnline==3?'pay-tab-active':'']" @click="switchOnline(3)">本月</div>
+          </div>
+        </div>
+        <div class="online-table">
+          <div class="online-table-top">
+            <div class="online-table-top-item">用户ID</div>
+            <div class="online-table-top-item">登录时间</div>
+            <div class="online-table-top-item">退出时间</div>
+            <div class="online-table-top-item">在线时长</div>
+          </div>
+          <div class="online-table-box">
+            <div class="online-table-bot" v-for="(item,index) in tableList" :key="index">
+              <div class="online-table-bot-item">{{item.user}}</div>
+              <div class="online-table-bot-item">{{item.loginTime}}</div>
+              <div class="online-table-bot-item">{{item.logoutTime}}</div>
+              <div class="online-table-bot-item">{{item.time}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="board-bottom-right">
+        <div class="pay-box">
+          <div class="title">用户活跃度</div>
+          <div class="pay-tab">
+            <div :class="['pay-tab-item',curUserAct==1?'pay-tab-active':'']" @click="switchCurUserAct(1)">昨日</div>
+            <div :class="['pay-tab-item',curUserAct==2?'pay-tab-active':'']" @click="switchCurUserAct(2)">今日</div>
+            <div :class="['pay-tab-item',curUserAct==3?'pay-tab-active':'']" @click="switchCurUserAct(3)">本周</div>
+          </div>
+        </div>
+        <div class="echarts-pie" id="echarts-pie"></div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="./js/vue@2.js"></script>
+<script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.common.js"></script>
+
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/ajax/libs/layer/layer.min.js}"></script>
+<script>
+  $('#pay-qrcode').click(function () {
+    var html = $(this).html();
+    parent.layer.open({
+      title: false,
+      type: 1,
+      closeBtn: false,
+      shadeClose: true,
+      area: ['600px', '360px'],
+      content: html
+    });
+  });
+
+  const app = new Vue({
+    el: "#app",
+    data: {
+      curOrderTime: 1,
+      curOnline: 1,
+      curUserAct: 1,
+      tableList: [],
+      seekList: [],
+      echartsPieData: [],
+
+      baseData: {
+        totalUser: 0,
+        loginTodayUser: 0,
+        registereTodayUser: 0,
+        totalPost: 0,
+        totalTodayPost: 0,
+      }
+    },
+    mounted() {
+      let that = this;
+      // 用户在线时长
+      $.ajax({
+        url: "/business/chatUser/showData", type: "post", success: function (result) {
+          that.baseData = result;
+        }
+      });
+      // 待审核
+      $.ajax({
+        url: "/business/forumPost/showPendingReviewData", type: "post", success: function (result) {
+          console.log(result);
+          that.seekList = result.data;
+        }
+      });
+
+      this.showPayLogDataFn();
+      this.showOnlineDataFn();
+      this.showActivityLevelDataFn();
+    },
+    methods: {
+      // 去审核
+      seekDetail(id) { },
+      // 支付记录
+      showPayLogDataFn() {
+        let that = this;
+        // 支付记录
+        $.ajax({
+          url: "/business/payLog/showPayLogData", type: "post", success: function (result) {
+            console.log(result);
+            // 支付记录
+            let xData = []
+            let yData = []
+            if (that.curOrderTime == 1) {
+              xData = result.nonthList.filters(item => item.time);
+              yData = result.nonthList.filters(item => item.value);
+            } else if (that.curOrderTime == 2) {
+              xData = result.weekList.filters(item => item.time);
+              yData = result.weekList.filters(item => item.value);
+            } else if (that.curOrderTime == 3) {
+              xData = result.yearList.filters(item => item.time);
+              yData = result.yearList.filters(item => item.value);
+            }
+            that.echartsBar(xData, yData);
+          }
+        });
+      },
+      // 在线用户 今日登录用户 展示登录时间
+      showOnlineDataFn() {
+        let that = this;
+        // 在线用户 今日登录用户 展示登录时间
+        $.ajax({
+          url: "/business/chatUser/showOnlineData", type: "post", success: function (result) {
+            console.log(result);
+            that.tableList = result.todayList.map(item => {
+              return {
+                user: item.loginName,
+                loginTime: item.loginDate,
+                logoutTime: '',// 退出时间？？？
+                time: '',// 在线时长？？？
+              }
+            })
+          }
+        });
+      },
+      // 活跃度
+      showActivityLevelDataFn() {
+        let that = this;
+        // 活跃度
+        $.ajax({
+          url: "/business/chatUser/showActivityLevelData", type: "post", success: function (result) {
+            console.log(result);
+
+            if (that.curUserAct == 1) {
+              that.echartsPieData = result.daymap.map(item => {
+                return {
+                  value: item.value,
+                  name: item.time
+                }
+              });
+            } else if (that.curUserAct == 2) {
+              that.echartsPieData = result.monmap.map(item => {
+                return {
+                  value: item.value,
+                  name: item.time
+                }
+              });
+            } else if (that.curUserAct == 3) {
+              that.echartsPieData = result.weekmap.map(item => {
+                return {
+                  value: item.value,
+                  name: item.time
+                }
+              });
+            }
+            that.echartsPie();
+          }
+        });
+      },
+      switchOrder(type) {
+        this.curOrderTime = type;
+        this.showPayLogDataFn();
+      },
+      switchOnline(type) {
+        this.curOnline = type;
+        this.showOnlineDataFn();
+      },
+      switchCurUserAct(type) {
+        this.curUserAct = type;
+        this.showActivityLevelDataFn();
+      },
+      echartsBar(xData, yData) {
+        var myChart = echarts.init(document.getElementById("order-bar"));
+        let resizeTimer = null;
+        let option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          grid: {
+            left: 20,
+            right: 20,
+            bottom: 5,
+            containLabel: true
+          },
+          xAxis: [
+            {
+              type: 'category',
+              data: xData,
+              axisTick: {
+                alignWithLabel: true
+              },
+              axisLabel: {
+                color: '#000000a6',
+                margin: 20 // 设置标签与轴线之间的距离为20像素
+              }
+            }
+          ],
+          yAxis: [
+            {
+              type: 'value'
+            }
+          ],
+          series: [
+            {
+              name: '支付订单',
+              type: 'bar',
+              barWidth: 24,
+              itemStyle: {
+                color: '#4285F4'
+              },
+              data: yData
+            }
+          ]
+        };
+        myChart.setOption(option);
+
+        window.addEventListener("resize", () => {
+          if (resizeTimer) clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            myChart.resize();
+          }, 100);
+        });
+      },
+      echartsPie() {
+        let that = this;
+        var myChart = echarts.init(document.getElementById("echarts-pie"));
+        let resizeTimer = null;
+        let option = {
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+          },
+          legend: {
+            top: 'center',
+            right: 90,
+            orient: 'vertical',
+            icon: 'circle',
+            itemWidth: 8, // 设置宽度
+            itemHeight: 8, // 设置高度
+            formatter: function (name) {
+              let v;
+              that.echartsPieData.forEach((item) => {
+                if (item.name === name) {
+                  v = item.value;
+                }
+              });
+              return name + '    |   ' + v;
+            },
+            textStyle: {
+              color: '#000000a6'
+            }
+          },
+          toolbox: {
+            show: false,
+          },
+          series: [
+            {
+              name: '用户活跃度',
+              type: 'pie',
+              radius: [30, 80],
+              center: ['20%', '50%'],
+              roseType: 'radius',
+              itemStyle: {
+                borderRadius: 0
+              },
+              label: {
+                show: false
+              },
+              emphasis: {
+                label: {
+                  show: true
+                }
+              },
+              data: this.echartsPieData
+            },
+
+          ]
+        };
+        myChart.setOption(option);
+
+        window.addEventListener("resize", () => {
+          if (resizeTimer) clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            myChart.resize();
+          }, 100);
+        });
+      }
+    }
+  });
+
+
+
+</script>
+
+</html>

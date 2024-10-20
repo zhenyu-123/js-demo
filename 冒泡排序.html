@@ -1,0 +1,49 @@
+<!--
+ * @Description: 
+ * @Autor: sy
+ * @Date: 2021-07-16 11:28:16
+ * @LastEditors: sy
+ * @LastEditTime: 2021-07-16 11:52:51
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>冒泡</title>
+  </head>
+  <body></body>
+  <script>
+    /**
+   https://www.cnblogs.com/qisimx/p/10541397.html
+ */
+
+    function betterSortArr(arr, n) {
+      for (let i = 0; i < n; i++) {
+        let isFlag = false;
+        // 一共比较n-1轮
+        for (let j = 0; j < n; j++) {
+          if (arr[j] > arr[j + 1]) {
+            // let a = arr[j],
+            //     b = arr[j+1];
+            // arr[j] = b;
+            // arr[j+1] = a;
+            arr[j] = arr.splice(j + 1, 1, arr[j])[0];
+            isFlag = true;
+            // console.log('change')//发生交换的次数 9
+          }
+          // console.log('compare')//比较的次数 40
+          // 次数少了24次
+        }
+        if (!isFlag) {
+          return arr;
+          break;
+        }
+      }
+    }
+    let arr = [45, 21, 48, 65, 98, 44, 87, 55, 89, 98];
+    let length = arr.length;
+    console.log(betterSortArr(arr, length));
+  </script>
+</html>

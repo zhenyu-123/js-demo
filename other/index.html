@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.common.js"></script>
+    <title>Document</title>
+  </head>
+  <style>
+    #Echarts {
+      width: 700px;
+      height: 500px;
+    }
+  </style>
+  <body>
+    <div id="Echarts"></div>
+    <script>
+      var data = [
+        ["00:00:00", 20],
+        ["00:30:00", 300],
+        ["01:00:00", 116],
+        ["01:30:00", 200],
+        ["02:00:00", 116],
+        ["02:30:00", 129],
+        ["03:00:00", 116],
+        ["03:30:00", 129],
+        ["04:00:00", 116],
+        ["04:30:00", 129],
+        ["05:00:00", 116],
+        ["05:30:00", 129],
+        ["06:00:00", 116],
+        ["06:30:00", 129],
+        ["07:00:00", 116],
+        ["07:30:00", 129],
+        ["08:00:00", 116],
+        ["08:30:00", 129],
+        ["09:00:00", 116],
+        ["09:30:00", 129],
+        ["10:00:00", 116],
+        ["10:30:00", 129],
+        ["11:00:00", 116],
+        ["11:30:00", 129],
+        ["12:00:00", 116],
+        ["12:30:00", 129],
+        ["13:00:00", 116],
+        ["13:30:00", 129],
+        ["14:00:00", 116],
+        ["14:30:00", 129],
+        ["15:00:00", 116],
+        ["15:30:00", 129],
+        ["16:00:00", 116],
+        ["16:30:00", 129],
+        ["17:00:00", 116],
+        ["17:30:00", 129],
+        ["18:00:00", 116],
+        ["18:30:00", 129],
+        ["19:00:00", 116],
+        ["19:30:00", 129],
+        ["20:00:00", 116],
+        ["20:30:00", 129],
+      ];
+      var data2 = [
+        ["00:00:00", 20],
+        ["00:20:00", 100],
+        ["00:30:00", 300],
+        ["01:00:00", 116],
+        ["01:30:00", 50],
+        ["02:00:00", 116],
+        ["02:30:00", 129],
+        ["03:00:00", 116],
+        ["03:30:00", 129],
+        ["04:00:00", 116],
+        ["04:30:00", 129],
+        ["05:00:00", 116],
+        ["05:30:00", 129],
+        ["06:00:00", 116],
+        ["06:30:00", 129],
+        ["07:00:00", 116],
+        ["07:30:00", 129],
+        ["08:00:00", 116],
+        ["08:30:00", 129],
+        ["09:00:00", 116],
+        ["09:30:00", 129],
+        ["10:00:00", 116],
+        ["10:30:00", 129],
+        ["11:00:00", 116],
+        ["11:30:00", 129],
+        ["12:00:00", 116],
+        ["12:30:00", 129],
+        ["13:00:00", 116],
+        ["13:30:00", 129],
+        ["14:00:00", 116],
+        ["14:30:00", 129],
+        ["15:00:00", 116],
+        ["15:30:00", 129],
+        ["16:00:00", 116],
+        ["16:30:00", 129],
+        ["17:00:00", 116],
+        ["17:30:00", 129],
+        ["18:00:00", 116],
+        ["18:30:00", 129],
+        ["19:00:00", 116],
+        ["19:30:00", 129],
+        ["20:00:00", 116],
+        ["20:30:00", 129],
+        ["21:00:00", 116],
+        ["21:30:00", 129],
+        ["22:00:00", 116],
+        ["22:30:00", 129],
+        ["23:00:00", 116],
+        ["23:30:00", 129],
+        ["24:00:00", 129],
+      ];
+      var dateList = data.map(function (item) {
+        return item[0];
+      });
+      var dateList2 = data2.map(function (item) {
+        return item[0];
+      });
+      var valueList = data.map(function (item) {
+        return item[1];
+      });
+      var valueList2 = data2.map(function (item) {
+        return item[1];
+      });
+      echartsFn(dateList, valueList, dateList2, valueList2);
+
+      function echartsFn(dateList, valueList, dateList2, valueList2) {
+        var myChart = echarts.init(document.getElementById("Echarts"));
+        let resizeTimer = null;
+        let option = {
+          tooltip: {
+            trigger: "axis",
+            formatter: function (params) {
+              //自定义鼠标移上去显示的框
+              // console.log(params, '22222'); // 当我们想要自定义提示框内容时，可以先将鼠标悬浮的数据打印出来，然后根据需求提取出来即可
+              if (params[0] && params[1]) {
+                let firstParams = params[0];
+                let sndParams = params[1];
+                return (
+                  firstParams.marker +
+                  device_id0 +
+                  "#" +
+                  "&nbsp" +
+                  firstParams.name +
+                  "<br>" +
+                  firstParams.data +
+                  " %" +
+                  "<br>" +
+                  sndParams.marker +
+                  device_id1 +
+                  "#" +
+                  "&nbsp" +
+                  sndParams.name +
+                  "<br>" +
+                  sndParams.data +
+                  " %"
+                );
+              } else {
+                let firstParams = params[0];
+                return (
+                  firstParams.marker +
+                  device_id0 +
+                  "#" +
+                  "&nbsp" +
+                  firstParams.name +
+                  "<br>" +
+                  firstParams.data +
+                  " %"
+                );
+              }
+            },
+          },
+          xAxis: [
+            {
+              data: dateList,
+              type: "category",
+              boundaryGap: false,
+              axisLine: {
+                lineStyle: {
+                  color: "#2D4063", //X轴的颜色
+                },
+              },
+              axisLabel: {
+                textStyle: {
+                  color: "#7785B9", //x轴文字颜色
+                  fontSize: "10",
+                },
+              },
+              axisTick: {
+                //x轴刻度线
+                show: false,
+              },
+            },
+            {
+              data: dateList2,
+              gridIndex: 0,
+              type: "category",
+              boundaryGap: false,
+              axisLine: {
+                lineStyle: {
+                  color: "#2D4063", //X轴的颜色
+                },
+              },
+              axisLabel: {
+                textStyle: {
+                  color: "#7785B9", //x轴文字颜色
+                  fontSize: "10",
+                },
+              },
+              axisTick: {
+                //x轴刻度线
+                show: false,
+              },
+            },
+          ],
+          yAxis: [
+            {
+              type: "value",
+              max: 300,
+              min: 0,
+              axisLine: {
+                lineStyle: {
+                  color: "#2D4063", //y轴的颜色
+                },
+              },
+              splitLine: {
+                show: true, //虽然是y轴  但是是横线
+                lineStyle: {
+                  color: ["#272F52"],
+                  width: 1,
+                  type: "solid",
+                },
+              },
+              axisLabel: {
+                textStyle: {
+                  color: "#7785B9",
+                  fontSize: "10",
+                },
+              },
+              nameTextStyle: {
+                color: ["#7785B9"],
+              },
+              axisTick: {
+                //y轴刻度线
+                show: false,
+              },
+            },
+            {
+              gridIndex: 0,
+              type: "value",
+              max: 300,
+              min: 0,
+              axisLine: {
+                lineStyle: {
+                  color: "#2D4063", //y轴的颜色
+                },
+              },
+              splitLine: {
+                show: true, //虽然是y轴  但是是横线
+                lineStyle: {
+                  color: ["#272F52"],
+                  width: 1,
+                  type: "solid",
+                },
+              },
+              axisLabel: {
+                textStyle: {
+                  color: "#7785B9",
+                  fontSize: "10",
+                },
+              },
+              nameTextStyle: {
+                color: ["#7785B9"],
+              },
+              axisTick: {
+                //y轴刻度线
+                show: false,
+              },
+            },
+          ],
+          grid: {
+            left: "3%", //折线图距离边界的距离
+            right: "4%",
+            bottom: "3%",
+            top: "10%",
+            containLabel: true,
+          },
+          visualMap: {
+            show: false,
+            type: "piecewise",
+            pieces: [
+              {
+                //多少范围内的折点颜色  （可以使用 lt（小于，less than），gt（大于，greater than），lte（小于等于 less than or equals），gte（大于等于，greater than or equals）来表达边界）
+                gt: 0,
+                lte: 99,
+                color: "#FF9399", //红色 大于0小于等于99
+              },
+              {
+                gt: 99,
+                lte: 100,
+                color: "#fff", //白色 大于99小于等于100
+              },
+              {
+                gt: 100,
+                color: "#E8B988", //橙色 大于100
+              },
+            ],
+          },
+          series: [
+            {
+              type: "line",
+              showSymbol: true,
+              data: valueList,
+              smooth: true, //圆滑的曲线
+              symbol: "circle", //设置折点的颜色必须要加这个属性 设定为实心点
+              symbolSize: 8, //设定实心点的大小
+              itemStyle: {
+                normal: {
+                  color: "#7cffb1", //折线的颜色
+                  lineStyle: {
+                    color: "#7cffb1", //折点的颜色
+                  },
+                },
+              },
+              // areaStyle: { //渐变色
+              //     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              //         {
+              //             offset: 0,
+              //             color: 'rgba(85, 238, 255, 0.3)'
+              //         },
+              //         {
+              //             offset: 1,
+              //             color: 'rgba(85, 238, 255, 0.1)'
+              //         }
+              //     ])
+              // }
+            },
+            {
+              type: "line",
+              showSymbol: true, //出现小圆点
+              data: valueList2,
+              xAxisIndex: 1,
+              yAxisIndex: 1,
+              smooth: true, //圆滑的曲线
+              symbol: "circle", //设置折点的颜色必须要加这个属性 设定为实心点
+              symbolSize: 8, //设定实心点的大小
+              itemStyle: {
+                normal: {
+                  color: "#6672fb",
+                  lineStyle: {
+                    color: "#6672fb",
+                  },
+                },
+              },
+              // areaStyle: { //渐变色
+              //     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              //         {
+              //             offset: 0,
+              //             color: 'rgba(85, 238, 255, 0.3)'
+              //         },
+              //         {
+              //             offset: 1,
+              //             color: 'rgba(85, 238, 255, 0.1)'
+              //         }
+              //     ])
+              // }
+            },
+          ],
+        };
+        myChart.setOption(option);
+
+        window.addEventListener("resize", () => {
+          if (resizeTimer) clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            myChart.resize();
+          }, 100);
+        });
+      }
+    </script>
+  </body>
+</html>

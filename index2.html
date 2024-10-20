@@ -1,0 +1,65 @@
+<!--
+Lodash是一个意在提高开发者效率,提高JS原生方法性能的JS库。简单的说就是，很多方法lodash已经帮你写好了，直接调用就行，不用自己费尽心思去写了，而且可以统一方法的一致性。Lodash使用了一个简单的 _ 符号，就像Jquery的 $ 一样，十分简洁。
+ * @Description: Lodash 防抖、节流
+ * @Autor: sy
+ * @Date: 2021-07-01 14:29:08
+ * @LastEditors: sy
+ * @LastEditTime: 2021-07-05 16:23:36
+  https://www.lodashjs.com/
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app">
+      {{counter}}
+      <button @click="debouncedClick(1)">点击</button>
+    </div>
+  </body>
+</html>
+<script src="https://unpkg.com/vue@next"></script>
+<!-- <script src="https://unpkg.com/lodash@4.17.20/lodash.min.js"></script> -->
+<script src="./js/lodash.min.js"></script>
+<script>
+  Vue.createApp({
+    data() {
+      return {
+        counter: 0,
+      };
+    },
+    created() {
+      // 用 Lodash 的防抖函数
+      this.debouncedClick = _.debounce(this.dianji, 6000, { leading: false });
+    },
+    unmounted() {
+      // 移除组件时，取消定时器
+      this.debouncedClick.cancel();
+    },
+    methods: {
+      // 用 Lodash 的防抖函数
+      // dianji: _.debounce(function () {
+      //   //这里不能改为function
+      //   this.counter++;
+      // }, 500),
+      dianji(t) {
+        // console.log(t)
+        // let count = 0;
+        // let time = setTimeout(() => {
+        //   count++;
+        //   // console.log(count);
+        //   if(count==6){
+        //     clearTimeout(time)
+        //   }else{
+        //     console.log("请1分钟后尝试")
+        //   }
+        // }, 1000);
+        this.counter++;
+      },
+    },
+  }).mount("#app");
+</script>

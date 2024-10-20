@@ -1,0 +1,8 @@
+@import "./index.scss";
+
+.header {
+    @include responsive('phone') {
+        color: red;
+    }
+}
+ 

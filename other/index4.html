@@ -1,0 +1,109 @@
+<!--
+ * @Description: 
+ * @Autor: sy
+ * @Date: 2024-01-29 19:21:52
+ * @LastEditors: sy
+ * @LastEditTime: 2024-01-30 08:41:36
+-->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        .draggable {
+            margin: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: move;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .draggable:hover {
+            box-shadow: 2px 2px 5px #888888;
+        }
+    </style>
+  </head>
+  <body>
+    <div
+      class="draggable"
+      draggable="true"
+ 
+    >
+      Item 1
+    </div>
+    <div
+      class="draggable"
+      draggable="true"
+ 
+    >
+      Item 2
+    </div>
+    <div
+      class="draggable"
+      draggable="true"
+ 
+    >
+      Item 3
+    </div>
+    <div
+      class="draggable"
+      draggable="true"
+ 
+    >
+      Item 4
+    </div>
+    <div
+      class="draggable"
+      draggable="true"
+ 
+    >
+      Item 5
+    </div>
+    <div
+      class="draggable"
+      draggable="true"
+ 
+    >
+      Item 6
+      <div>123</div>
+    </div>
+
+    <script>
+      const draggables = document.querySelectorAll(".draggable");
+      let dragSrcEl = null;
+
+      function handleDragStart(e) {
+        dragSrcEl = this;
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/html", this.innerHTML);
+      }
+
+      function handleDragOver(e) {
+        if (e.preventDefault) {
+          e.preventDefault();
+        }
+        e.dataTransfer.dropEffect = "move";
+        return false;
+      }
+
+      function handleDrop(e) {
+        if (e.stopPropagation) {
+          e.stopPropagation();
+        }
+        if (dragSrcEl !== this) {
+          dragSrcEl.innerHTML = this.innerHTML;
+          this.innerHTML = e.dataTransfer.getData("text/html");
+        }
+        return false;
+      }
+
+      draggables.forEach(function (draggable) {
+        draggable.addEventListener("dragstart", handleDragStart, false);
+        draggable.addEventListener("dragover", handleDragOver, false);
+        draggable.addEventListener("drop", handleDrop, false);
+      });
+    </script>
+  </body>
+</html>

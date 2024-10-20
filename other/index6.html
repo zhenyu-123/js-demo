@@ -1,0 +1,184 @@
+<!--
+ * @Description: 
+ * @Autor: sy
+ * @Date: 2024-04-25 14:49:27
+ * @LastEditors: sy
+ * @LastEditTime: 2024-04-26 08:43:50
+-->
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <th:block th:include="include :: header('新增探索')" />
+    <th:block th:include="include :: summernote-css" />
+    <style>
+      #chatContent {
+        border: 1px solid #ccc;
+        width: 700px;
+        height: 500px;
+        overflow-y: auto;
+      }
+      #chatContent .content {
+        margin: 32px 32px 0 32px;
+      }
+      #chatContent .item {
+        margin-top: 24px;
+        overflow: hidden;
+        display: block;
+      }
+      #chatContent .message-item {
+        padding: 32px 22px;
+        color: #000000;
+        font-size: 32px;
+        letter-spacing: 1px;
+        position: relative;
+      }
+
+      #chatContent .other {
+        border-radius: 8px 72px 72px 48px;
+        background: #70f2ed;
+        word-break: break-all;
+        float: left;
+      }
+
+      #chatContent .myself {
+        border-radius: 72px 48px 8px 72px;
+        background: #ffb5ef;
+        word-break: break-all;
+        float: right;
+      }
+      .delete-i{
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 12px;
+        color: red;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+
+  <body class="white-bg">
+    <div
+      class="wrapper wrapper-content animated fadeInRight ibox-content"
+      id="app"
+    >
+      <form class="form-horizontal m" id="form-explore-add">
+        <div class="form-group">
+          <label class="col-sm-3 control-label">标题：</label>
+          <div class="col-sm-8">
+            <input name="title" class="form-control" type="text" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">内容：</label>
+          <div class="col-sm-8">
+            <!-- <a class="btn btn-success" onclick="addButten()">
+              <i class="fa fa-plus"></i> 添加消息组
+            </a> -->
+            <input type="hidden" class="form-control" name="chatContent" />
+            <div class="summernote" id="chatContent">
+              <div class="content">
+                <div
+                  class="item"
+                  v-for="(item,index) in chatContent"
+                  :key="index"
+                >
+                  <div
+                    :class="['message-item',item.flow=='in'?'other':'myself']"
+                  >
+                    {{item.value}}
+                    <i class="fa fa-trash-o delete-i" @click="deleteItem(index)">删除</i>
+                  </div>
+                </div>
+              </div>
+              <div class="out_box_bot"></div>
+            </div>
+            <div class="chatGroup">
+              <div class="groupItem">
+                <div class="itemLeft" style="height: 40px">
+                  <span>消息</span>
+                  <input
+                    class="left"
+                    v-model="message"
+                    @blur="submitMessage(1)"
+                    @keyup.enter="submitMessage(1)"
+                  />
+                </div>
+                <div class="itemRight" style="height: 40px">
+                  <span>回复</span>
+                  <input
+                    class="right"
+                    v-model="applay"
+                    @blur="submitMessage(2)"
+                    @keyup.enter="submitMessage(2)"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-3 control-label">点赞数：</label>
+          <div class="col-sm-8">
+            <input name="likeNumber" class="form-control" type="text" />
+          </div>
+        </div>
+      </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: summernote-js" />
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script th:inline="javascript">
+      // 聊天内容
+      var chatContent = [];
+
+      // var prefix = ctx + "business/explore";
+      // $("#form-explore-add").validate({
+      //   focusCleanup: true,
+      // });
+
+      function submitHandler() {
+        if ($.validate.form()) {
+          $.operate.save(prefix + "/add", $("#form-explore-add").serialize());
+        }
+      }
+      var app = new Vue({
+        el: "#app",
+        data: {
+          applay: "",
+          message: "",
+          chatContent: [],
+        },
+        methods: {
+          submitMessage(type) {
+            if (type === 1 && this.message) {
+              let params = {
+                flow: "in",
+                value: this.message,
+              };
+              this.chatContent.push(params);
+              this.message = "";
+            } else if (type === 2 && this.applay) {
+              let params = {
+                flow: "out",
+                value: this.applay,
+              };
+              this.chatContent.push(params);
+              this.applay = "";
+            }
+            chatContent = this.chatContent;
+            setTimeout(() => {
+              document.querySelector(".out_box_bot").scrollIntoView({
+                behavior: "smooth",
+              });
+            }, 100);
+          },
+          deleteItem(index){
+            this.chatContent.splice(index,1)
+            chatContent = this.chatContent;
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

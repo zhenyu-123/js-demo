@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表格分栏</title>
+    <style>
+        .wrapper {
+            overflow: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        table {
+            border-collapse: collapse;
+            /* 合并边框 */
+            text-align: left;
+            width: 100%;
+        }
+
+        table th {
+            padding: 0 10px;
+            user-select: none;
+            background-color: #f3f4f6;
+            color: rgb(97 102 120/75%);
+        }
+
+        table :is(th, td) {
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            height: 32px;
+            border: 1px solid #e9e5f3;
+        }
+
+        table .cell-content {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+        }
+
+        table .draggable {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 6px;
+            cursor: col-resize;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        name
+                        <span class="draggable" onmousedown="initResize(0)"></span>
+                    </th>
+                    <th>
+                        age
+                        <span class="draggable" onmousedown="initResize(1)"></span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <span class="cell-content">小明</span>
+                    </td>
+                    <td>
+                        <span class="cell-content">18</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        const columns = document.querySelectorAll('table thead th');
+        const wrapper = document.querySelector('.wrapper');
+        let activeIndex;
+        const resize = (e) => {
+            const nextwidth = e.clientX - columns[activeIndex].offsetLeft - wrapper.offsetLeft; // 计算下一个单元格的宽度
+            columns[activeIndex].style.width = nextwidth + 'px'; // 设置下一个单元格的宽度
+        }
+        const stopResize = () => {
+            document.body.style.cursor = 'default';
+            document.removeEventListener('mousemove', resize);
+            document.removeEventListener('mouseup', stopResize);
+        }
+        const initResize = (index) => {
+            activeIndex = index;
+            document.body.style.cursor = 'col-resize';
+            document.addEventListener('mousemove', resize);
+            document.addEventListener('mouseup', stopResize);
+        }
+    </script>
+</body>
+
+</html>

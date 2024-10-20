@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.common.js"></script>
+    <title>Document</title>
+  </head>
+  <style>
+    #Echarts {
+      width: 700px;
+      height: 500px;
+    }
+  </style>
+  <body>
+    <div id="Echarts"></div>
+    <script>
+      var data = [
+        // ["00:00:00", 20],
+        ["00:30:00", 300],
+        ["01:00:00", 116],
+        ["01:30:00", 200],
+        ["02:00:00", 116],
+        ["02:30:00", 129],
+        ["03:00:00", 116],
+        ["03:30:00", 129],
+        ["04:00:00", 116],
+        ["04:30:00", 129],
+        ["05:00:00", 116],
+        ["05:30:00", 129],
+        ["06:00:00", 116],
+        ["06:30:00", 129],
+        ["07:00:00", 116],
+        ["07:30:00", 129],
+        ["08:00:00", 116],
+        ["08:30:00", 129],
+        ["09:00:00", 116],
+        ["09:30:00", 129],
+        ["10:00:00", 116],
+        ["10:30:00", 129],
+        ["11:00:00", 116],
+        ["11:30:00", 129],
+        ["12:00:00", 116],
+        ["12:30:00", 129],
+        ["13:00:00", 116],
+        ["13:30:00", 129],
+        ["14:00:00", 116],
+        ["14:30:00", 129],
+        ["15:00:00", 116],
+        ["15:30:00", 129],
+        ["16:00:00", 116],
+        ["16:30:00", 129],
+        ["17:00:00", 116],
+        ["17:30:00", 129],
+        ["18:00:00", 116],
+        ["18:30:00", 129],
+        ["19:00:00", 116],
+        ["19:30:00", 129],
+        ["20:00:00", 116],
+        ["20:30:00", 129],
+      ];
+      var data2 = [
+        ["00:00:00", 20],
+        ["00:20:00", 100],
+        ["00:30:00", 300],
+        ["01:00:00", 116],
+        ["01:30:00", 50],
+        ["02:00:00", 116],
+        ["02:30:00", 129],
+        ["03:00:00", 116],
+        ["03:30:00", 129],
+        ["04:00:00", 116],
+        ["04:30:00", 129],
+        ["05:00:00", 116],
+        ["05:30:00", 129],
+        ["06:00:00", 116],
+        ["06:30:00", 129],
+        ["07:00:00", 116],
+        ["07:30:00", 129],
+        ["08:00:00", 116],
+        ["08:30:00", 129],
+        ["09:00:00", 116],
+        ["09:30:00", 129],
+        ["10:00:00", 116],
+        ["10:30:00", 129],
+        ["11:00:00", 116],
+        ["11:30:00", 129],
+        ["12:00:00", 116],
+        ["12:30:00", 129],
+        ["13:00:00", 116],
+        ["13:30:00", 129],
+        ["14:00:00", 116],
+        ["14:30:00", 129],
+        ["15:00:00", 116],
+        ["15:30:00", 129],
+        ["16:00:00", 116],
+        ["16:30:00", 129],
+        ["17:00:00", 116],
+        ["17:30:00", 129],
+        ["18:00:00", 116],
+        ["18:30:00", 129],
+        ["19:00:00", 116],
+        ["19:30:00", 129],
+        ["20:00:00", 116],
+        ["20:30:00", 129],
+        ["21:00:00", 116],
+        ["21:30:00", 129],
+        ["22:00:00", 116],
+        ["22:30:00", 129],
+        ["23:00:00", 116],
+        ["23:30:00", 129],
+        ["24:00:00", 129],
+      ];
+      var dateList = data.map(function (item) {
+        return item[0];
+      });
+      var dateList2 = data2.map(function (item) {
+        return item[0];
+      });
+      var valueList = data.map(function (item) {
+        return item[1];
+      });
+      var valueList2 = data2.map(function (item) {
+        return item[1];
+      });
+      echartsFn(dateList, valueList, dateList2, valueList2);
+
+      function echartsFn(dateList, valueList, dateList2, valueList2) {
+        var myChart = echarts.init(document.getElementById("Echarts"));
+        const colors = ["#5470C6", "#EE6666"];
+        let resizeTimer = null;
+        let option = {
+          color: colors,
+          tooltip: {
+            trigger: "none",
+            axisPointer: {
+              type: "cross",
+            },
+          },
+          legend: {},
+          dataZoom: [
+            {
+              type: "inside",
+              start: 0,
+              end: 50,
+            },
+            {
+              start: 0,
+              end: 50,
+            },
+          ],
+          grid: {
+            top: 70,
+            bottom: 50,
+          },
+          xAxis: [
+            {
+              type: "category",
+              axisTick: {
+                alignWithLabel: true,
+              },
+              axisLine: {
+                onZero: false,
+                lineStyle: {
+                  color: colors[0],
+                },
+              },
+              axisPointer: {
+                label: {
+                  formatter: function (params) {
+                    return (
+                      "Precipitation  " +
+                      params.value +
+                      (params.seriesData.length
+                        ? "：" + params.seriesData[0].data
+                        : "")
+                    );
+                  },
+                },
+              },
+              // prettier-ignore
+              data: [
+"2024-01-08 15:34:24",
+ "2024-01-08 15:39:24", 
+"2024-01-08 15:44:24", 
+"2024-01-08 15:49:24",
+"2024-01-08 15:54:24",
+"2024-01-08 15:59:25",
+"2024-01-08 16:04:25"
+],
+            },
+            {
+              type: "category",
+              axisTick: {
+                alignWithLabel: true,
+              },
+              axisLine: {
+                onZero: false,
+                lineStyle: {
+                  color: colors[1],
+                },
+              },
+              axisPointer: {
+                label: {
+                  formatter: function (params) {
+                    return (
+                      "Precipitation  " +
+                      params.value +
+                      (params.seriesData.length
+                        ? "：" + params.seriesData[0].data
+                        : "")
+                    );
+                  },
+                },
+              },
+              // prettier-ignore
+              data: [
+"2024-01-08 15:39:24",
+"2024-01-08 15:44:24",
+"2024-01-08 15:49:24",
+"2024-01-08 15:54:24",
+"2024-01-08 15:59:25",
+"2024-01-08 16:04:25"],
+            },
+          ],
+          yAxis: [
+            {
+              type: "value",
+            },
+          ],
+          series: [
+            {
+              name: "Precipitation(2015)",
+              type: "line",
+              xAxisIndex: 0,
+              smooth: true,
+              emphasis: {
+                focus: "series",
+              },
+              data: [26, 25.8, 25.5, 25.3, 25, 24.8, 24.6],
+            },
+            {
+              name: "Precipitation(2016)",
+              type: "line",
+              smooth: true,
+              xAxisIndex: 1,
+              emphasis: {
+                focus: "series",
+              },
+              data: [0, 0, 0, 0, 0, 0],
+            },
+          ],
+        };
+        myChart.setOption(option);
+
+        window.addEventListener("resize", () => {
+          if (resizeTimer) clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(() => {
+            myChart.resize();
+          }, 100);
+        });
+      }
+    </script>
+  </body>
+</html>
