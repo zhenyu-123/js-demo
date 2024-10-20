@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/u-reset.css">
+    <title>短信验证码</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: auto;
+    }
+
+    .box {
+        width: 400px;
+        height: 200px;
+        background-color: #fff;
+        border: 1px #ddd solid;
+    }
+
+    .fontstyle {
+        color: #ddd;
+    }
+
+    .right {
+        width: 82.65px;
+    }
+</style>
+
+<body>
+    <div class="box">
+        <input type="button" class="right" style=" width:100px;" value="发送验证码"></input>
+    </div>
+</body>
+<script>
+
+    let send = document.querySelector('.right')
+    let timer = 60;
+    let time = null;
+    let timeput = null;
+    setTimeout(() => {
+
+    }, 1000 * 60);
+
+
+    send.onclick = function () {
+
+        time = setInterval(function () {
+            timer--;
+            if (timer == 0) {
+                send.value = '发送验证码';
+                send.className = ''
+                timer = 60;
+                send.disabled = false
+                clearInterval(time);
+                return;
+            }
+            console.log(timer)
+            send.disabled = true
+            send.value = timer + '秒后重试';
+            send.className = 'fontstyle'
+
+        }, 1000)
+
+
+
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        list-style: none;
+        padding: 0;
+    }
+
+    .list {
+        width: 500px;
+        height: 300px;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+        margin: auto;
+    }
+
+    /* tab */
+    .list .tab {
+        width: 100%;
+        height: 80px;
+        overflow: hidden;
+    }
+
+    .list .tab li {
+        width: 25%;
+        height: 100%;
+        cursor: pointer;
+        border-right: 1px solid #ddd;
+        text-align: center;
+        line-height: 80px;
+        color: slategray;
+        font-size: 24px;
+        box-sizing: border-box;
+        float: left;
+        border-bottom: 1px solid #ddd;
+
+    }
+
+    .list .tab li:last-child {
+        border-right: none;
+    }
+
+    /* box */
+    .list .tabbox {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .list .tabbox li {
+        height: 100%;
+        width: 100%;
+        text-align: center;
+    }
+
+    /* style */
+    .fontstyle {
+        color: tan !important;
+        border-bottom: none !important;
+    }
+</style>
+
+<body>
+    <!-- 列表 -->
+    <div class="list">
+        <ul class="tab">
+            <li>游戏</li>
+            <li>电影</li>
+            <li>音乐</li>
+            <li>动漫</li>
+        </ul>
+        <ul class="tabbox">
+            <li>王者荣耀</li>
+            <li>风暴发米拉</li>
+            <li>少年，solo</li>
+            <li>鬼灭之刃</li>
+        </ul>
+    </div>
+</body>
+<script>
+    window.onload = function () {
+        let tab = document.querySelectorAll('.list .tab li');
+        let box = document.querySelectorAll('.list .tabbox li');
+        let timer = null;
+
+        for (let i = 0; i < tab.length; i++) {
+            //给tab
+            tab[i].id = i;
+
+            tab[i].onmousemove = function () {
+
+                var that = this;
+                for (let j = 0; j < tab.length; j++) {
+                    tab[j].className = '';
+                    box[j].style.display = 'none'
+                }
+
+                //延迟选项卡
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = null;
+                }
+                timer = setTimeout(function () {
+                    box[that.id].style.display = 'block';
+                    tab[i].className = 'fontstyle';
+                }, 100);
+            }
+
+
+
+        }
+    }
+</script>
+
+</html>
