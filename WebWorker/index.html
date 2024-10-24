@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    const myWorker = new Worker("./worker.js");
+    myWorker.onmessage = function (e) {
+      console.log("Fibonacci result:", e.data);
+    };
+    myWorker.postMessage(40); // 请求计算斐波那契数列的第40项
+
+  </script>
+</body>
+
+</html>
