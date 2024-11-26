@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>美团商品分类</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<style>
+  /* 基础样式 */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* 顶部 Tab 切换 */
+  .tabs {
+    display: flex;
+    background-color: #f5f5f5;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    margin-right: 10px;
+    background-color: #ddd;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .tab:hover {
+    background-color: #ccc;
+  }
+
+  /* 中间部分 */
+  .content {
+    display: flex;
+
+  }
+
+  /* 左侧分类 */
+  .categories {
+    width: 200px;
+    background-color: #f9f9f9;
+    padding: 10px;
+    position: sticky;
+    top: 68px;
+
+    transition: height 0.3s;
+
+    overflow: auto;
+  }
+
+  .category {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .category:hover {
+    background-color: #f0f0f0;
+  }
+
+  /* 右侧内容 */
+  .products {
+    flex: 1;
+    padding: 10px;
+  }
+
+  .product {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+</style>
+
+<body>
+  <div class="container">
+    <!-- 顶部 Tab 切换 -->
+    <div class="tabs">
+      <div class="tab">Tab 1</div>
+      <div class="tab">Tab 2</div>
+      <div class="tab">Tab 3</div>
+    </div>
+
+    <!-- 中间部分 -->
+    <div class="content">
+      <!-- 左侧分类 -->
+      <div class="categories">
+        <div class="category">分类 1</div>
+        <div class="category">分类 2</div>
+        <div class="category">分类 3</div>
+        <div class="category">分类 4</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 5</div>
+        <div class="category">分类 7</div>
+      </div>
+
+      <!-- 右侧内容 -->
+      <div class="products">
+        <div class="product">商品 1</div>
+        <div class="product">商品 2</div>
+        <div class="product">商品 3</div>
+        <div class="product">商品 4</div>
+        <div class="product">商品 5</div>
+        <div class="product">商品 6</div>
+        <div class="product">商品 7</div>
+        <div class="product">商品 8</div>
+        <div class="product">商品 9</div>
+        <div class="product">商品 10</div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+
+
+<script>
+  function updateCategoriesHeight() {
+    const categories = document.querySelector('.categories');
+    const distanceFromTop = categories.getBoundingClientRect().top;
+    const newHeight = `calc(100vh - ${distanceFromTop}px)`; // 计算新的高度
+    categories.style.height = newHeight; // 设置新的高度
+    console.log('Categories 距离视口顶部的距离:', distanceFromTop, newHeight);
+  }
+
+
+  window.onload = function () {
+    updateCategoriesHeight(); // 页面加载时设置高度
+  };
+</script>
