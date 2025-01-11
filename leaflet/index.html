@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet-draw/dist/leaflet.draw.css"
+    />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-draw/dist/leaflet.draw.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <title>地图编辑器</title>
+    <style>
+      #controls {
+        position: absolute;
+        top: 350px;
+        left: 10px;
+        z-index: 1000;
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      }
+      #controls button {
+        display: block;
+        margin: 5px 0;
+      }
+      #map {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="map"></div>
+      <div id="controls">
+        <button @click="importGeoJSON">导入 GeoJSON</button>
+        <button @click="switchLayer('street')">街道图层</button>
+        <button @click="switchLayer('satellite')">影像图层</button>
+        <button @click="exportGeoJSON">导出 GeoJSON</button>
+      </div>
+    </div>
+
+    <script>
+      new Vue({
+        el: "#app",
+        data: {
+          map: null,
+          drawnItems: null,
+          baseLayers: null,
+          layersData: {},
+        },
+        mounted() {
+          this.initMap();
+        },
+        methods: {
+          initMap() {
+            this.map = L.map("map").setView([39.9042, 113.2919], 12);
+
+            this.baseLayers = {
+              street: L.tileLayer(
+                "http://webst0{s}.is.autonavi.com/appmaptile?style=8&x={x}&y={y}&z={z}",
+                {
+                  subdomains: ["1", "2", "3", "4"],
+                  attribution: "© OpenStreetMap contributors",
+                }
+              ),
+              satellite: L.tileLayer(
+                "http://webst0{s}.is.autonavi.com/appmaptile?style=6&x={x}&y={y}&z={z}",
+                {
+                  subdomains: ["1", "2", "3", "4"],
+                  attribution: "© OpenStreetMap contributors",
+                }
+              ),
+            };
+
+            this.baseLayers.street.addTo(this.map);
+
+            this.drawnItems = new L.FeatureGroup();
+            this.map.addLayer(this.drawnItems);
+
+            const drawControl = new L.Control.Draw({
+              edit: {
+                featureGroup: this.drawnItems,
+                remove: true,
+              },
+              draw: {
+                polygon: true,
+                polyline: false,
+                rectangle: true,
+                circle: false,
+                marker: false,
+              },
+            });
+            this.map.addControl(drawControl);
+
+            this.map.on("draw:deleted", (e) => {
+              e.layers.eachLayer((layer) => {
+                this.drawnItems.removeLayer(layer);
+                delete this.layersData[layer._leaflet_id];
+              });
+            });
+
+            this.map.on(L.Draw.Event.CREATED, (event) => {
+              const layer = event.layer;
+              this.drawnItems.addLayer(layer);
+
+              const color = this.getRandomColor();
+              layer.setStyle({
+                fillColor: color,
+                weight: 2,
+                opacity: 1,
+                color: "white",
+                fillOpacity: 0.7,
+              });
+
+              this.$set(this.layersData, layer._leaflet_id, {
+                name: "",
+                description: "",
+                color: color,
+              });
+
+              this.bindPopup(layer);
+            });
+          },
+          bindPopup(layer) {
+            const popupContent = document.createElement("div");
+            popupContent.innerHTML = this.getPopupContent(layer);
+            const vm = this;
+            new Vue({
+              el: popupContent,
+              data: {
+                name: vm.layersData[layer._leaflet_id].name,
+                description: vm.layersData[layer._leaflet_id].description,
+              },
+              template: `
+                <div>
+                  <b>区域属性</b><br>
+                  <label>名称：<input type="text" v-model="name" placeholder="输入名称"></label><br>
+                  <label>描述：<input type="text" v-model="description" placeholder="输入描述"></label><br>
+                </div>
+              `,
+              watch: {
+                name(newVal) {
+                  vm.layersData[layer._leaflet_id].name = newVal;
+                  layer.properties.name = newVal;
+                },
+                description(newVal) {
+                  vm.layersData[layer._leaflet_id].description = newVal;
+                  layer.properties.description = newVal;
+                },
+              },
+            });
+
+            layer.bindPopup(popupContent);
+          },
+          getPopupContent(layer) {
+            const data = this.layersData[layer._leaflet_id];
+            return `<b>区域属性</b><br>
+              <label>名称：<input type="text" class="name" placeholder="输入名称" value="${data.name}"></label><br>
+              <label>描述：<input type="text" class="description" placeholder="输入描述" value="${data.description}"></label><br>`;
+          },
+          getRandomColor() {
+            const letters = "0123456789ABCDEF";
+            let color = "#";
+            for (let i = 0; i < 6; i++) {
+              color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+          },
+          importGeoJSON() {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = ".geojson";
+            input.onchange = (e) => {
+              const file = e.target.files[0];
+              if (!file) return;
+
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                try {
+                  const geojson = JSON.parse(e.target.result);
+                  L.geoJSON(geojson, {
+                    style: (feature) => ({
+                      fillColor:
+                        feature.properties.color || this.getRandomColor(),
+                      weight: 2,
+                      opacity: 1,
+                      color: "white",
+                      fillOpacity: 0.7,
+                    }),
+                    onEachFeature: (feature, layer) => {
+                      this.drawnItems.addLayer(layer);
+                      layer.properties = feature.properties;
+                      this.$set(
+                        this.layersData,
+                        layer._leaflet_id,
+                        feature.properties
+                      );
+                      this.bindPopup(layer);
+                    },
+                  }).addTo(this.map);
+                } catch (error) {
+                  alert("导入 GeoJSON 失败，请检查文件格式！");
+                }
+              };
+              reader.readAsText(file);
+            };
+            input.click();
+          },
+          switchLayer(layerType) {
+            if (this.baseLayers[layerType]) {
+              Object.values(this.baseLayers).forEach((layer) => {
+                if (this.map.hasLayer(layer)) {
+                  this.map.removeLayer(layer);
+                }
+              });
+              this.baseLayers[layerType].addTo(this.map);
+            }
+          },
+          exportGeoJSON() {
+            const geojson = this.drawnItems.toGeoJSON();
+            geojson.features.forEach((feature) => {
+              const layerId = feature.properties._leaflet_id;
+              if (layerId && this.layersData[layerId]) {
+                feature.properties = {
+                  ...feature.properties,
+                  ...this.layersData[layerId],
+                };
+              }
+            });
+            const dataStr =
+              "data:text/json;charset=utf-8," +
+              encodeURIComponent(JSON.stringify(geojson));
+            const downloadAnchorNode = document.createElement("a");
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "地图数据.geojson");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
